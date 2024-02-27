@@ -23,9 +23,23 @@ func getFriends(context *gin.Context) {
 	context.IndentedJSON(http.StatusOK, friends)
 }
 
+func addFriend(context *gin.Context) {
+	var newFriend friend
+
+	if err := context.BindJSON(&newFriend); err != nil {
+		return
+	}
+
+	friends = append(friends, newFriend)
+
+	context.IndentedJSON(http.StatusCreated, newFriend)
+}
+
 func main() {
 	router := gin.Default()
 
 	router.GET("/friends", getFriends)
+	router.POST("/friends", addFriend)
+
 	router.Run("localhost:8080")
 }
